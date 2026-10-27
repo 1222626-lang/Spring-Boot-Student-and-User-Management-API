@@ -40,6 +40,6 @@ public class DemoApplication {
 		System.out.println();
 		System.out.println("Application is starting. Enjoy exploring!");
 		System.out.println("==================================================");
-		System.out.println();
+
 	}
 }
