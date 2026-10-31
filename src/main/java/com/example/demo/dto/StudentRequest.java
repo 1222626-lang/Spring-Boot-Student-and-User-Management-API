@@ -14,7 +14,7 @@ public record StudentRequest(
 
         @NotBlank(message = "Email is required")
         @Email(message = "Email must be valid")
-        String email
+        String email)
 
-) {
+ {
 }

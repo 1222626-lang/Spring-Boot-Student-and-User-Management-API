@@ -54,7 +54,7 @@ public class SecurityConfig {
         System.out.println(
                 "Password encoder test: " +
                         passwordEncoder.matches(
-                                "Student123!",
+                                    "Student123!",
                                 student.getPassword()
                         )
         );

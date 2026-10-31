@@ -17,12 +17,16 @@ public abstract class AbstractCrudService<
 
     protected final BaseMapper<E, REQUEST, RESPONSE> mapper;
 
+    private final String resourceName;
+
     protected AbstractCrudService(
             JpaRepository<E, ID> repository,
-            BaseMapper<E, REQUEST, RESPONSE> mapper) {
+            BaseMapper<E, REQUEST, RESPONSE> mapper,
+            String resourceName) {
 
         this.repository = repository;
         this.mapper = mapper;
+        this.resourceName = resourceName;
     }
 
     // CREATE
@@ -44,8 +48,7 @@ public abstract class AbstractCrudService<
 
         E entity = repository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Record", id));
+                        new ResourceNotFoundException(resourceName, id));
 
         return mapper.toResponse(entity);
     }
@@ -66,8 +69,7 @@ public abstract class AbstractCrudService<
 
         E existing = repository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Record", id));
+                        new ResourceNotFoundException(resourceName, id));
 
         mapper.updateEntity(request, existing);
 
@@ -82,8 +84,8 @@ public abstract class AbstractCrudService<
     public void delete(ID id) {
 
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException(
-                    "Record", id);
+
+            throw new ResourceNotFoundException(resourceName, id);
         }
 
         repository.deleteById(id);
