@@ -25,37 +25,37 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        try {
-            Authentication authentication =
-                    authenticationManager.authenticate(
-                            new UsernamePasswordAuthenticationToken(
-                                    request.username(),
-                                    request.password()
-                            )
-                    );
+    public ResponseEntity<?> login(
+            @RequestBody LoginRequest request) {
 
-            String role = authentication.getAuthorities()
-                    .stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .filter(authority -> authority.startsWith("ROLE_"))
-                    .map(authority -> authority.substring(5))
-                    .findFirst()
-                    .orElseThrow();
+        Authentication authentication =
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                request.username(),
+                                request.password()
+                        )
+                );
 
-            String token = jwtService.generateToken(
-                    authentication.getName(), role
-            );
+        String role = authentication.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(authority -> authority.startsWith("ROLE_"))
+                .map(authority -> authority.substring(5))
+                .findFirst()
+                .orElseThrow();
 
-            return ResponseEntity.ok(Map.of("token", token));
+        String token = jwtService.generateToken(
+                authentication.getName(),
+                role
+        );
 
-        } catch (org.springframework.security.core.AuthenticationException ex) {
-            System.err.println(
-                    "Login failed for username: " + request.username()
-                            + " | Reason: " + ex.getClass().getSimpleName()
-            );
-            throw ex;
-        }
+        return ResponseEntity.ok(
+                Map.of(
+                        "token", token,
+                        "username", authentication.getName(),
+                        "role", role
+                )
+        );
     }
 
     public record LoginRequest(String username, String password) {

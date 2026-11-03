@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     private static final Logger logger =
             LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    // 404 - RESOURCE NOT FOUND
+    // 404 - RESOURCE NOT FOUND  ex -> id=100
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleResourceNotFound(
             ResourceNotFoundException exception) {

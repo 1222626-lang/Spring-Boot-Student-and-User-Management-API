@@ -4,7 +4,7 @@ package com.example.demo.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public record StudentRequest(
+public record UserProfileUpdateRequest(
 
         @NotBlank(message = "First name is required")
         String firstName,
@@ -13,8 +13,8 @@ public record StudentRequest(
         String lastName,
 
         @NotBlank(message = "Email is required")
-        @Email(message = "Email must be valid")
-        String email)
+        @Email(message = "Invalid email format")
+        String email
 
- {
+) {
 }

@@ -1,14 +1,15 @@
-
 package com.example.demo.repository;
 
-import com.example.demo.entity.Student;
+import com.example.demo.entity.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface StudentRepository extends JpaRepository<Student, Long> {
+import java.util.Optional;
 
-    // Check whether an email already exists
+public interface CompanyRepository extends JpaRepository<Company, Long> {
+
     boolean existsByEmailIgnoreCase(String email);
 
-    // Check whether an email belongs to another student
     boolean existsByEmailIgnoreCaseAndIdNot(String email, Long id);
+
+    Optional<Company> findByEmailIgnoreCase(String email);
 }

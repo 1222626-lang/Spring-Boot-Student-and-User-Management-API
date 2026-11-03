@@ -29,7 +29,6 @@ public abstract class AbstractCrudService<
         this.resourceName = resourceName;
     }
 
-    // CREATE
     @Override
     @Transactional
     public RESPONSE create(REQUEST request) {
@@ -78,7 +77,6 @@ public abstract class AbstractCrudService<
         return mapper.toResponse(saved);
     }
 
-    // DELETE
     @Override
     @Transactional
     public void delete(ID id) {
