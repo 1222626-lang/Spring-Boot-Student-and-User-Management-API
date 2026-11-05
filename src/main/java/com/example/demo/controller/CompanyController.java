@@ -32,10 +32,6 @@ public class CompanyController {
         this.service = service;
     }
 
-    // ==========================================
-    // CREATE COMPANY
-    // POST /api/companies
-    // ==========================================
 
     @PostMapping
     public ResponseEntity<CompanyResponse> create(
@@ -48,22 +44,13 @@ public class CompanyController {
                 .body(response);
     }
 
-    // ==========================================
-    // GET ALL COMPANIES WITH PAGINATION
-    // GET /api/companies
-    // GET /api/companies/page
-    // ==========================================
+
 
     @GetMapping({"", "/page"})
     public Page<CompanyResponse> getAll(Pageable pageable) {
 
         return service.getAll(pageable);
     }
-
-    // ==========================================
-    // GET COMPANY BY ID
-    // GET /api/companies/{id}
-    // ==========================================
 
     @GetMapping("/{id}")
     public CompanyResponse getById(
@@ -72,10 +59,6 @@ public class CompanyController {
         return service.getById(id);
     }
 
-    // ==========================================
-    // UPDATE COMPANY - PUT
-    // PUT /api/companies/{id}
-    // ==========================================
 
     @PutMapping("/{id}")
     public CompanyResponse update(
@@ -85,10 +68,6 @@ public class CompanyController {
         return service.update(id, request);
     }
 
-    // ==========================================
-    // PARTIAL UPDATE - PATCH
-    // PATCH /api/companies/{id}
-    // ==========================================
 
     @PatchMapping("/{id}")
     public CompanyResponse patch(
@@ -98,10 +77,6 @@ public class CompanyController {
         return service.patch(id, request);
     }
 
-    // ==========================================
-    // UPDATE COMPANY STATUS
-    // PATCH /api/companies/{id}/status
-    // ==========================================
 
     @PatchMapping("/{id}/status")
     public CompanyResponse updateStatus(
@@ -114,10 +89,6 @@ public class CompanyController {
         );
     }
 
-    // ==========================================
-    // DELETE COMPANY - SOFT DISABLE
-    // DELETE /api/companies/{id}
-    // ==========================================
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
@@ -128,10 +99,6 @@ public class CompanyController {
         return ResponseEntity.noContent().build();
     }
 
-    // ==========================================
-    // HEAD REQUEST
-    // HEAD /api/companies/{id}
-    // ==========================================
 
     @RequestMapping(
             value = "/{id}",
@@ -145,11 +112,6 @@ public class CompanyController {
         return ResponseEntity.ok().build();
     }
 
-    // ==========================================
-    // OPTIONS REQUEST
-    // OPTIONS /api/companies
-    // OPTIONS /api/companies/{id}
-    // ==========================================
 
     @RequestMapping(
             value = {"", "/{id}"},
