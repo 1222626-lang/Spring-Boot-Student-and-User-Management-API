@@ -43,6 +43,8 @@ public class UserController {
                                @Valid @RequestBody UserRequest request) {
         return service.update(id, request);
     }
+//patchusers
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

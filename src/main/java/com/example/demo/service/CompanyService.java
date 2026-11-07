@@ -1,6 +1,5 @@
 
 package com.example.demo.service;
-
 import com.example.demo.dto.CompanyPatchRequest;
 import com.example.demo.dto.CompanyRequest;
 import com.example.demo.dto.CompanyResponse;
@@ -175,30 +174,30 @@ public class CompanyService {
     // PARTIAL UPDATE - PATCH
     // ==========================================
 
-    public CompanyResponse patch(
+    public CompanyResponse patchCompany(
             Long id,
             CompanyPatchRequest request) {
-
+        // 1. Find company
         Company company = getCompany(id);
 
-        // Update name only if provided
-        if (request.name() != null) {
+        // 2. Update name only if provided
+        if (request.getName() != null) {
 
-            if (request.name().isBlank()) {
-
+            if (request.getName().isBlank()) {
                 throw new IllegalArgumentException(
                         "Company name cannot be blank"
                 );
             }
 
-            company.setName(request.name().trim());
+            company.setName(request.getName().trim());
         }
 
-        // Update email only if provided
-        if (request.email() != null) {
+        // 3. Update email only if provided
+        if (request.getEmail() != null) {
 
-            String email = normalizeEmail(request.email());
+            String email = normalizeEmail(request.getEmail());
 
+            // Check duplicate email
             if (companyRepository.existsByEmailIgnoreCaseAndIdNot(
                     email, id)) {
 
@@ -210,14 +209,15 @@ public class CompanyService {
             company.setEmail(email);
         }
 
-        // Update address only if provided
-        if (request.address() != null) {
-
-            company.setAddress(request.address().trim());
+        // 4. Update address only if provided
+        if (request.getAddress() != null) {
+            company.setAddress(request.getAddress().trim());
         }
 
+        // 5. Save updated company
         Company updatedCompany = companyRepository.save(company);
 
+        // 6. Convert Entity to Response DTO
         return toResponse(updatedCompany);
     }
 

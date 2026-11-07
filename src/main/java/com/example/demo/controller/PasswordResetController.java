@@ -14,25 +14,18 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 public class PasswordResetController {
-
     private final PasswordResetService service;
-
     public PasswordResetController(
             PasswordResetService service) {
-
         this.service = service;
     }
-
     @PostMapping("/forgot-password")
     public ResponseEntity<Map<String, String>> forgotPassword(
             @Valid @RequestBody PasswordResetRequest request) {
-
         String result = service.forgotPassword(request);
-
         return ResponseEntity.ok(
                 Map.of("message", result));
     }
-
     @PostMapping("/reset-password")
     public ResponseEntity<Map<String, String>> resetPassword(
             @Valid @RequestBody ResetPasswordRequest request) {

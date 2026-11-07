@@ -74,8 +74,6 @@ public class UserProfileController {
 
         return ResponseEntity.ok(response);
     }
-
-
     // UPDATE CURRENT USER PROFILE
     @PutMapping
     public ResponseEntity<Map<String, Object>> updateMyProfile(
@@ -101,11 +99,9 @@ public class UserProfileController {
 
         return getMyProfile(authentication);
     }
-
+//patch  users
     // GET LOGGED-IN USER FROM JWT
     private User getCurrentUser(Authentication authentication) {
-
-
         return userRepository
                 .findWithCompanyByUsernameIgnoreCaseAndIsDeletedFalse(
                         authentication.getName())

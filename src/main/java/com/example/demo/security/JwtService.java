@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class JwtService {
 
     private final JwtEncoder jwtEncoder;
-
+/////////////////
     public JwtService() {
         String secret =
                 "demo-secret-key-for-jwt-learning-2026-very-long";
@@ -29,7 +29,7 @@ public class JwtService {
                 secret.getBytes(StandardCharsets.UTF_8),
                 "HmacSHA256"
         );
-
+//NimbusJwtEncoder
         this.jwtEncoder =
                 new NimbusJwtEncoder(new ImmutableSecret<>(secretKey));
     }

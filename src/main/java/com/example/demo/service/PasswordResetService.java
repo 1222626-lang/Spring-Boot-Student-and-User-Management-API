@@ -39,8 +39,6 @@ public class PasswordResetService {
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
     }
-
-
     @Transactional
     public String forgotPassword(
             PasswordResetRequest request) {
@@ -49,7 +47,6 @@ public class PasswordResetService {
         String email = request.email()
                 .trim()
                 .toLowerCase();
-
         // Find active user
         User user = userRepository
                 .findByEmailIgnoreCaseAndIsDeletedFalse(email)
@@ -86,8 +83,6 @@ public class PasswordResetService {
 
         return "If the account exists, reset instructions will be sent.";
     }
-
-
     @Transactional
     public String resetPassword(
             ResetPasswordRequest request) {
