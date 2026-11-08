@@ -1,6 +1,6 @@
 
 package com.example.demo.security;
-
+import com.example.demo.entity.User;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.nio.charset.StandardCharsets;
@@ -34,14 +34,34 @@ public class JwtService {
                 new NimbusJwtEncoder(new ImmutableSecret<>(secretKey));
     }
 
-    public String generateToken(String username, String role) {
+    public String generateToken(User user) {
+
         Instant now = Instant.now();
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .subject(username)
+
+                .subject(user.getUsername())
+
                 .issuedAt(now)
-                .expiresAt(now.plus(30, ChronoUnit.MINUTES))
-                .claim("roles", java.util.List.of(role))
+
+                .expiresAt(now.plus(15, ChronoUnit.MINUTES))
+
+                .claim("userId", user.getId())
+
+                .claim("username", user.getUsername())
+
+                .claim("email", user.getEmail())
+
+                .claim("firstName", user.getFirstName())
+
+                .claim("lastName", user.getLastName())
+
+                .claim("roles",
+                        java.util.List.of(user.getRole().name()))
+
+                .claim("companyId",
+                        user.getCompany().getId())
+
                 .build();
 
         return jwtEncoder.encode(

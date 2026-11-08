@@ -1,4 +1,3 @@
-
 package com.example.demo.security;
 
 import com.example.demo.entity.CompanyStatus;
@@ -36,33 +35,40 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
+    // Must be identical to the secret used in JwtService
     private static final String SECRET =
             "demo-secret-key-for-jwt-learning-2026-very-long";
 
-    // PASSWORD ENCODER
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // DATABASE USER DETAILS SERVICE
     @Bean
     public UserDetailsService userDetailsService(
             UserRepository userRepository) {
 
         return username -> {
 
-            // Find active (not deleted) user and load company
+            // Find user who is not deleted
             User user = userRepository
-                    .findWithCompanyByUsernameIgnoreCaseAndIsDeletedFalse(username)
+                    .findWithCompanyByUsernameIgnoreCaseAndIsDeletedFalse(
+                            username
+                    )
                     .orElseThrow(() ->
-                            new UsernameNotFoundException("User not found"));
+                            new UsernameNotFoundException(
+                                    "User not found"
+                            )
+                    );
 
-            // Check whether the user's company is active
+            // Check if company exists and is active
             if (user.getCompany() == null ||
-                    user.getCompany().getStatus() != CompanyStatus.ACTIVE) {
+                    user.getCompany().getStatus()
+                            != CompanyStatus.ACTIVE) {
 
-                throw new UsernameNotFoundException("Company is disabled");
+                throw new UsernameNotFoundException(
+                        "Company is disabled"
+                );
             }
 
             // Return Spring Security UserDetails
@@ -74,7 +80,7 @@ public class SecurityConfig {
         };
     }
 
-    // AUTHENTICATION MANAGER
+
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration configuration)
@@ -83,7 +89,7 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-    // JWT DECODER
+
     @Bean
     public JwtDecoder jwtDecoder() {
 
@@ -98,13 +104,17 @@ public class SecurityConfig {
     }
 
     // JWT AUTHORITY CONVERTER
+
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
 
         JwtGrantedAuthoritiesConverter authoritiesConverter =
                 new JwtGrantedAuthoritiesConverter();
 
+        // Read roles from JWT claim named "roles"
         authoritiesConverter.setAuthoritiesClaimName("roles");
+
+        // Convert USER to ROLE_USER and ADMIN to ROLE_ADMIN
         authoritiesConverter.setAuthorityPrefix("ROLE_");
 
         JwtAuthenticationConverter converter =
@@ -117,7 +127,7 @@ public class SecurityConfig {
         return converter;
     }
 
-    // SECURITY FILTER CHAIN
+
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
@@ -125,34 +135,41 @@ public class SecurityConfig {
             throws Exception {
 
         http
+
                 // Disable CSRF for stateless REST API
                 .csrf(csrf -> csrf.disable())
 
-                // JWT-based authentication: no HTTP session
+                // No HTTP session
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
                         )
                 )
 
-                // Authorization rules
+                // =========================
+                // AUTHORIZATION RULES
+                // =========================
+
                 .authorizeHttpRequests(auth -> auth
 
                         // PUBLIC ENDPOINTS
                         .requestMatchers(
                                 "/api/auth/login",
+                                "/api/auth/refresh",
+                                "/api/auth/logout",
                                 "/api/auth/forgot-password",
                                 "/api/auth/reset-password",
                                 "/api/public/**"
                         ).permitAll()
 
                         // PERSONAL USER ENDPOINTS
+                        // USER and ADMIN can access their own profile
                         .requestMatchers(
                                 "/api/users/me",
                                 "/api/users/me/**"
                         ).hasAnyRole("USER", "ADMIN")
 
-                        // ADMIN ONLY
+                        // ADMIN ONLY ENDPOINTS
                         .requestMatchers(
                                 "/api/admin/**",
                                 "/api/users/**",
@@ -166,7 +183,7 @@ public class SecurityConfig {
                 // Disable form login
                 .formLogin(form -> form.disable())
 
-                // Disable HTTP Basic authentication
+                // Disable HTTP Basic
                 .httpBasic(basic -> basic.disable())
 
                 // Enable JWT authentication
